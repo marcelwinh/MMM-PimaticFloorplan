@@ -63,7 +63,8 @@ modules: [
 				ikea_Light:      	{ left: 150,  top: 5, pimaticId: "ikeaLight.state" },
 				led_bed:      	 	{ left: 80,  top: 280, pimaticId: "ledBed.state" },
 				nightstand_light:	{ left: 50,  top: 280, pimaticId: "nightstandLight.state" },
-				tv_backlight:      	{ left: 15,  top: 20, pimaticId: "tvBacklight.state" },
+				tv_backlight:      	{ left: 15,  top: 20, pimaticId: "tvBacklight.state", imageOn: 'customOn.png', imageOff:'customOff.png'},
+				tv_status:   		{ left: 15, top: 140, pimaticId: "tv-status.presence", imageOn: 'tvOn.png', imageOff:'tvOff.png'},
 			},
 			windows: { // list all window / door contacts to be shown (must be of pimatic type Switch or Contact)
 				// pimatic item: left, top, radius (draws quadrant), midPoint, and optionally counterwindow and color
@@ -87,7 +88,7 @@ modules: [
 				Temperature_Bad:    			{ left: 50, top: 205,  color: "white", decimals: 1, pimaticId: "wandthmerostat-bad.temperature"},
 				Temperature_Bad_soll:    		{ left: 50, top: 230,  color: "grey", decimals: 1, pimaticId: "thermostat-bad-new.temperatureSetpoint"},
 				Temperature_Wohnzimmer:        	{ left: 80,  top: 60, color: "white", decimals: 1, pimaticId: "wand-thermostat-wohnzimmer.temperature"},
-				Temperature_Wohnzimmer_soll:    { left: 80,  top: 85, color: "grey", decimals: 1, pimaticId: "thermostat-couch.temperatureSetpoint"},
+				Temperature_Wohnzimmer_soll:    { left: 80,  top: 85, color: "grey", decimals: 1, pimaticId: "thermostat-couch.temperatureSetpoint", postfix: '\u00B0C', prefix: 'WZ Soll', image: 'customImage.png'},
 			}
 		}
 	},
@@ -108,9 +109,9 @@ The following properties needs to be configured:
 |``light``|The name and size of the light image|
 |``window``|Default color of the open windows and doors|
 |``label``|Default color and size of the labels|
-|``lights``|An array of lights in pimatic with their position on the floorplan and pimaticId|
-|``windows``|An array of windows in pimatic with their position on the floorplan, orientation, defaultValue (closed) and pimaticId optional color|
-|``labels``|An array of labels in pimatic with their position on the floorplan and pimaticId, optional color, size, decimals|
+|``lights``|An array of lights in pimatic with their position on the floorplan and pimaticId, **optional:** imageOn, imageOff|
+|``windows``|An array of windows in pimatic with their position on the floorplan, orientation, defaultValue (closed) and pimaticId, **optional:** color|
+|``labels``|An array of labels in pimatic with their position on the floorplan and pimaticId, **optional:** color, size, decimals, prefix, postfix, image|
 
 
 ## Special Thanks

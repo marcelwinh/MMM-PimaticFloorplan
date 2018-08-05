@@ -23,7 +23,8 @@ Module.register("MMM-PimaticFloorplan", {
 			height: 333, // image height
 		},
 		light: {
-			image: "light.png", // located in subfolder 'images'
+			imageOn: "lightOn.png", // located in subfolder 'images'
+			imageOff: "lightOff.png", // located in subfolder 'images'
 			width: 19, // image width
 			height: 19, // image height
 		},
@@ -128,6 +129,7 @@ Module.register("MMM-PimaticFloorplan", {
 		if (item in this.config.lights) {
 			var visible = state;
 			this.setVisible("pimatic_" + item, visible);
+			this.setVisible("pimatic_" + item + '_off', !visible);
 		} else if (item in this.config.windows) {
 			var visible = state === !this.config.windows[item].default;
 			this.setVisible("pimatic_" + item, visible);
@@ -137,7 +139,7 @@ Module.register("MMM-PimaticFloorplan", {
 		} else if (item in this.config.labels) {
 			var element = document.getElementById("pimatic_" + item);
 			if (element != null) {
-				element.innerHTML = this.formatLabel(state, this.config.labels[item]);
+				element.innerHTML = this.config.labels[item].image ? "<img src='" + this.file("/images/" + this.config.labels[item].image) + "'/> " + this.formatLabel(state, this.config.labels[item]) : this.formatLabel(state, this.config.labels[item]);
 			}
 		}
 	},
@@ -169,6 +171,9 @@ Module.register("MMM-PimaticFloorplan", {
 	appendLights: function(floorplan) {
 		for (var item in this.config.lights) {
 			var position = this.config.lights[item];
+			if(this.config.light.imageOff){
+				floorplan.appendChild(this.getLightOffDiv(item, position));
+			}
 			floorplan.appendChild(this.getLightDiv(item, position));
 		}
 	},
@@ -179,12 +184,29 @@ Module.register("MMM-PimaticFloorplan", {
 		if (!this.config.draft)
 			style += "display:none;"; // hide by default, do not hide if all items should be shown
 
+		var image = position.imageOn ? position.imageOn : this.config.light.imageOn;
 		// create div, set style and text
 		var lightDiv = document.createElement("div");
 		lightDiv.id = 'pimatic_' + item;
 		lightDiv.style.cssText = style;
-		lightDiv.innerHTML = "<img src='" + this.file("/images/" + this.config.light.image) + "' style='"
+		
+		lightDiv.innerHTML = "<img src='" + this.file("/images/" + image) + "' style='"
 			+ "height:" + this.config.light.height + "px;width:" + this.config.light.width + "px;'/>";
+		return lightDiv;
+	},
+	getLightOffDiv: function(item, position) {
+		// set style: location
+		var style = "margin-left:" + position.left + "px;margin-top:" + position.top + "px;position:absolute;"
+			+ "height:" + this.config.light.height + "px;width:" + this.config.light.width + "px;";
+		// if (!this.config.draft)
+		// 	style += "display:none;"; // hide by default, do not hide if all items should be shown
+		var image = position.imageOff ? position.imageOff : this.config.light.imageOff;
+		// create div, set style and text
+		var lightDiv = document.createElement("div");
+		lightDiv.id = 'pimatic_' + item + '_off';
+		lightDiv.style.cssText = style;
+		lightDiv.innerHTML = "<img src='" + this.file("/images/" + image) + "' style='"
+		+ "height:" + this.config.light.height + "px;width:" + this.config.light.width + "px;'/>";
 		return lightDiv;
 	},
 
@@ -207,7 +229,7 @@ Module.register("MMM-PimaticFloorplan", {
 		var labelDiv = document.createElement("div");
 		labelDiv.id = 'pimatic_' + item;
 		labelDiv.style.cssText = style;
-		labelDiv.innerHTML = "&lt;" + item + "&gt;";
+		labelDiv.innerHTML = labelConfig.image ? "<img src='" + this.file("/images/" + labelConfig.image) + "'/>" + "&lt;" + item  + "&gt;" : "&lt;" + item  + "&gt;" ;
 		return labelDiv;
 	},
 
